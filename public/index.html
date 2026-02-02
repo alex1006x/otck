@@ -28,30 +28,42 @@
     </div>
 
     <script>
-        async function startAnalysis() {
-            const fileInput = document.getElementById('imageInput');
-            const resultBox = document.getElementById('resultBox');
-            const loader = document.getElementById('loader');
+// এই অংশটুকু index.html এর script ট্যাগের ভেতরে আপডেট করুন
+async function startAnalysis() {
+    const fileInput = document.getElementById('imageInput');
+    const resultBox = document.getElementById('resultBox');
+    const loader = document.getElementById('loader');
 
-            if (!fileInput.files[0]) return alert("Upload a screenshot first!");
+    if (!fileInput.files[0]) return alert("Upload a screenshot first!");
 
-            loader.style.display = 'block';
-            resultBox.style.display = 'none';
+    loader.style.display = 'block';
+    resultBox.style.display = 'none';
 
-            const formData = new FormData();
-            formData.append('image', fileInput.files[0]);
+    const formData = new FormData();
+    formData.append('image', fileInput.files[0]);
 
-            try {
-                const response = await fetch('/analyze', { method: 'POST', body: formData });
-                const data = await response.json();
-                resultBox.style.display = 'block';
-                resultBox.innerHTML = `<strong>AI Prediction:</strong><br>${data.result.replace(/\n/g, '<br>')}`;
-            } catch (err) {
-                alert("Error connecting to server.");
-            } finally {
-                loader.style.display = 'none';
-            }
+    try {
+        // এখানে শুধু '/analyze' ব্যবহার করুন, কোনো লোকালহোস্ট লিঙ্ক রাখবেন না
+        const response = await fetch('/analyze', { 
+            method: 'POST', 
+            body: formData 
+        });
+
+        if (!response.ok) {
+            throw new Error('Server response was not ok');
         }
+
+        const data = await response.json();
+        resultBox.style.display = 'block';
+        resultBox.innerHTML = `<strong>AI Prediction:</strong><br>${data.result.replace(/\n/g, '<br>')}`;
+    } catch (err) {
+        console.error(err);
+        resultBox.style.display = 'block';
+        resultBox.innerHTML = `<span style="color:red">Error: Server is not responding. Please check Render Logs.</span>`;
+    } finally {
+        loader.style.display = 'none';
+    }
+}
     </script>
 </body>
 </html>

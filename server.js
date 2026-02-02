@@ -1,3 +1,5 @@
+const cors = require('cors'); // যোগ করুন
+app.use(cors()); // যোগ করুন
 const express = require('express');
 const multer = require('multer');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
