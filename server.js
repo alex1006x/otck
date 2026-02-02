@@ -1,13 +1,15 @@
-const cors = require('cors'); // যোগ করুন
-app.use(cors()); // যোগ করুন
 const express = require('express');
+const cors = require('cors'); // ১. আগে ইমপোর্ট করুন
 const multer = require('multer');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 require('dotenv').config();
 
-const app = express();
+const app = express(); // ২. আগে app তৈরি করুন
+app.use(cors());       // ৩. এখন cors ব্যবহার করুন
+
 const upload = multer({ storage: multer.memoryStorage() });
 
+// বাকি কোড নিচে আগের মতোই থাকবে...
 // Gemini API Setup
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
