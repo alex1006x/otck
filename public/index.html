@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI OTC Predictor</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: #1e293b; padding: 2rem; border-radius: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 100%; max-width: 450px; text-align: center; }
+        h1 { color: #38bdf8; margin-bottom: 1.5rem; font-size: 1.5rem; }
+        .upload-area { border: 2px dashed #334155; padding: 20px; border-radius: 0.5rem; margin-bottom: 1rem; cursor: pointer; }
+        input[type="file"] { margin: 10px 0; color: #94a3b8; }
+        button { background: #0ea5e9; color: white; border: none; padding: 12px 24px; border-radius: 0.5rem; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; }
+        button:hover { background: #0284c7; }
+        #resultBox { margin-top: 1.5rem; padding: 1rem; background: #0f172a; border-radius: 0.5rem; text-align: left; display: none; border-left: 4px solid #38bdf8; }
+        .loader { display: none; color: #38bdf8; margin: 10px 0; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI OTC ANALYZER</h1>
+        <div class="upload-area">
+            <input type="file" id="imageInput" accept="image/*">
+        </div>
+        <button onclick="startAnalysis()">ANALYZE NEXT CANDLE</button>
+        <div id="loader" class="loader">Scanning Market Patterns...</div>
+        <div id="resultBox"></div>
+    </div>
+
+    <script>
+        async function startAnalysis() {
+            const fileInput = document.getElementById('imageInput');
+            const resultBox = document.getElementById('resultBox');
+            const loader = document.getElementById('loader');
+
+            if (!fileInput.files[0]) return alert("Upload a screenshot first!");
+
+            loader.style.display = 'block';
+            resultBox.style.display = 'none';
+
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            try {
+                const response = await fetch('/analyze', { method: 'POST', body: formData });
+                const data = await response.json();
+                resultBox.style.display = 'block';
+                resultBox.innerHTML = `<strong>AI Prediction:</strong><br>${data.result.replace(/\n/g, '<br>')}`;
+            } catch (err) {
+                alert("Error connecting to server.");
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
